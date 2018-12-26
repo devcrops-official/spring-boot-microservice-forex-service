@@ -2,7 +2,10 @@
 # Docker Hub https://hub.docker.com/_/openjdk/
 # Read more about containers on our dev center
 # https://devcenter.wercker.com/overview-and-core-concepts/containers/
-box: openjdk:8-jdk
+box: 
+  id: openjdk:8-jdk-alpine
+  ports:
+    - $PORT
 
 # This is the build pipeline. Pipelines are the core of wercker
 # Read more about pipelines on our dev center
@@ -17,3 +20,18 @@ build:
       goals: clean install
       cache_repo: true
       version: 3.5.2
+
+#Push the docker image with our built and tested application to the Oracle Container Registry
+push-release:
+  steps:
+    - script:
+      code: cp $WERCKER_SOURCE_DIR/target/spring-boot-microservice-forex-service-0.0.1-SNAPSHOT.jar /app.jar
+    - internal/docker-push:
+        username: $DOCKER_USERNAME
+        password: $DOCKER_PASSWORD
+        repository: $DOCKER_REPO
+        registry: $DOCKER_REGISTRY
+        tag: $WERCKER_GIT_REPOSITORY-$WERCKER_GIT_COMMIT
+        working-dir: /pipeline/source
+        ports: $PORT
+        cmd: "java -Djava.security.egd=file:/dev/./urandom -jar /app.jar"
