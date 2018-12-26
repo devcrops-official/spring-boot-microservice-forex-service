@@ -3,7 +3,7 @@
 # Read more about containers on our dev center
 # https://devcenter.wercker.com/overview-and-core-concepts/containers/
 box: 
-  id: openjdk:8-jdk-alpine
+  id: openjdk:8-jdk
   ports:
     - $PORT
 
