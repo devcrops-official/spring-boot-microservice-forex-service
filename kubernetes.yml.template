@@ -1,27 +1,27 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: spring-boot-microservice-forex-service-v1
+  name: forex-service-v1
   labels:
     commit: ${WERCKER_GIT_COMMIT}
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: spring-boot-microservice-forex-service
+      app: forex-service
   template:
     metadata:
       labels:
-        app: spring-boot-microservice-forex-service
+        app: forex-service
         commit: ${WERCKER_GIT_COMMIT}
     spec:
       containers:
-      - name: spring-boot-microservice-forex-service
+      - name: forex-service
         image: ${DOCKER_REPO}:${WERCKER_GIT_REPOSITORY}-${WERCKER_GIT_COMMIT}
         imagePullPolicy: Always
         ports:
-        - name: spring-boot-microservice-forex-service
-          containerPort: 1080
+        - name: forex-service
+          containerPort: ${PORT}
           protocol: TCP
       imagePullSecrets:
         - name: wercker
@@ -29,15 +29,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: spring-boot-microservice-forex-service
+  name: forex-service
   labels:
-    app: spring-boot-microservice-forex-service
+    app: forex-service
     commit: ${WERCKER_GIT_COMMIT}
 spec:
   ports:
   - port: 30000
-    targetPort: 1080
+    targetPort: ${PORT}
   selector:
-    app: spring-boot-microservice-forex-service
+    app: forex-service
   type: ClusterIP
 ---
