@@ -35,3 +35,23 @@ push-release:
         working-dir: /pipeline/source
         ports: $PORT
         cmd: "java -Djava.security.egd=file:/dev/./urandom -jar /app.jar"
+
+#Deploy our container from the Docker Hub to Kubernetes
+deploy-to-cluster:
+    box:
+        id: alpine
+        cmd: /bin/sh
+    steps:
+
+    - bash-template
+
+    - script:
+        name: "Visualise Kubernetes config"
+        code: cat kubernetes.yml
+
+    - kubectl:
+        name: deploy to kubernetes
+        server: $KUBERNETES_MASTER
+        token: $KUBERNETES_TOKEN
+        insecure-skip-tls-verify: true
+        command: apply -f kubernetes.yml
