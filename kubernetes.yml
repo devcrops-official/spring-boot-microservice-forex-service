@@ -21,7 +21,7 @@ spec:
         imagePullPolicy: Always
         ports:
         - name: spring-boot-microservice-forex-service
-          containerPort: ${PORT}
+          containerPort: 1080
           protocol: TCP
       imagePullSecrets:
         - name: wercker
@@ -36,7 +36,7 @@ metadata:
 spec:
   ports:
   - port: 30000
-    targetPort: ${PORT}
+    targetPort: 1080
   selector:
     app: spring-boot-microservice-forex-service
   type: ClusterIP
